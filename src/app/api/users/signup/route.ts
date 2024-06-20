@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import User from "@/models/User";
+import UserModel from "@/models/User.model";
 import bcryptjs from "bcryptjs";
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 
@@ -7,25 +7,25 @@ export async function POST(request: Request) {
   await dbConnect();
 
   try {
-    const { userName, email, password } = await request.json();
+    const { username, email, password } = await request.json();
 
-    const existingUserVerifiedByEmail = await User.findOne({
-      userName: userName,
+    const existingUserVerifiedByEmail = await UserModel.findOne({
+      username: username,
       isVerified: true,
     });
     if (existingUserVerifiedByEmail) {
       return Response.json(
         {
           success: false,
-          message: "Username is already taken",
+          message: "username is already taken",
         },
         { status: 400 }
       );
     }
 
     const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-    const existingUserByEmail = await User.findOne({ email });
+    let createdUser;
+    const existingUserByEmail = await UserModel.findOne({ email });
     if (existingUserByEmail) {
       if (existingUserByEmail.isVerified) {
         return Response.json(
@@ -37,31 +37,34 @@ export async function POST(request: Request) {
         );
       } else {
         const hashedPassword = await bcryptjs.hash(password, 10);
+        existingUserByEmail.username = username;
         existingUserByEmail.password = hashedPassword;
         existingUserByEmail.verifyCode = verifyCode;
         existingUserByEmail.verifyCodeExpiry = new Date(Date.now() + 3600000);
-        await existingUserByEmail.save();
+        const savedUser = await existingUserByEmail.save();
+        createdUser = await UserModel.findById(savedUser._id).select("-password");
       }
     } else {
       const hashedPassword = await bcryptjs.hash(password, 10);
       const expiryDate = new Date();
       expiryDate.setHours(expiryDate.getHours() + 1);
 
-      const newUser = new User({
-        userName,
+      const newUser = new UserModel({
+        username,
         email,
         password: hashedPassword,
         verifyCode,
         verifyCodeExpiry: expiryDate,
       });
 
-      await newUser.save();
+      const savedUser = await newUser.save();
+      createdUser = await UserModel.findById(savedUser._id).select("-password");
     }
 
     //Send Verification email
     const emailRespone = await sendVerificationEmail(
       email,
-      userName,
+      username,
       verifyCode
     );
     console.log(emailRespone);
@@ -80,6 +83,7 @@ export async function POST(request: Request) {
       {
         success: true,
         message: "User registered successfully. Please verify your account",
+        newUser: createdUser,
       },
       { status: 201 }
     );
