@@ -1,15 +1,60 @@
-import Image from "next/image";
+"use client";
+import { MessagesSquare } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Autoplay from "embla-carousel-autoplay";
+import messages from "@/messages.json";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 
-export default function Home() {
+const Home = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      
+    <div className="flex flex-col min-h-screen bg-[#121212] text-[#E0E0E0] overflow-hidden">
+      <main className="flex-grow flex flex-col items-center justify-center px-4 md:px-24 py-12">
+        <section className="text-center mb-8 md:mb-12">
+          <h1 className="text-3xl md:text-5xl font-bold text-[#80CBC4]">
+            Dive into the World of Anonymous Feedback
+          </h1>
+          <p className="mt-3 md:mt-4 text-base md:text-lg text-[#B0BEC5]">
+            ShadowConnect - Where your identity remains a secret.
+          </p>
+        </section>
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-      <h1 className="text-4xl font-semibold">
-       ShadowConnect
-      </h1>
-      </div>
-    </main>
+        <Carousel
+          plugins={[Autoplay({ delay: 2000 })]}
+          className="w-full max-w-lg md:max-w-xl"
+        >
+          <CarouselContent>
+            {messages.map((message, index) => (
+              <CarouselItem key={index} className="p-4">
+                <Card className="bg-[#2C2C2C] shadow-lg rounded-lg">
+                  <CardHeader className="bg-[#3A3A3A] text-[#E0E0E0] rounded-t-lg">
+                    <CardTitle className="text-lg md:text-xl text-[#80CBC4]">
+                      {message.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex flex-col md:flex-row items-start space-y-2 md:space-y-0 md:space-x-4 p-4">
+                    <MessagesSquare className="flex-shrink-0 text-[#FFAB91]" />
+                    <div>
+                      <p className="text-[#B0BEC5]">{message.content}</p>
+                      <p className="text-xs text-[#78909C]">
+                        {message.received}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </main>
+      <footer className="text-center p-4 md:p-6 bg-[#2C2C2C] text-[#B0BEC5] w-full">
+        © 2024 ShadowConnect. All rights reserved.
+      </footer>
+    </div>
   );
-}
+};
+
+export default Home;
