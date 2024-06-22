@@ -41,6 +41,9 @@ export const authOptions: NextAuthOptions = {
             user.password
           );
           if (isPasswordCorrect) {
+            // console.log("user", user, "");
+
+            console.log("Successfully logged in");
             return user;
           } else {
             throw new Error("Incorrect password");
@@ -55,7 +58,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token._id = user._id?.toString();
-        token.userName = user.userName;
+        token.username = user.username;
         token.isVerified = user.isVerified;
         token.isAcceptingMessage = user.isAcceptingMessage;
       }
@@ -64,7 +67,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token) {
         session.user._id = token._id;
-        session.user.userName = token.userName;
+        session.user.username = token.username;
         session.user.isVerified = token.isVerified;
         session.user.isAcceptingMessage = token.isAcceptingMessage;
       }

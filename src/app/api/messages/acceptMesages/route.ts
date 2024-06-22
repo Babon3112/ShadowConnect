@@ -4,7 +4,7 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User.model";
 import { User } from "next-auth";
 
-export async function POST(request: Request) {
+export async function PUT(request: Request) {
   await dbConnect();
 
   const session = await getServerSession(authOptions);

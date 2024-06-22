@@ -1,36 +1,28 @@
 import "next-auth";
-import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
-  interface User {
-    _id?: string;
-    userName?: string;
-    isVerified?: boolean;
-    isAcceptingMessage?: boolean;
-  }
-
   interface Session {
     user: {
       _id?: string;
-      userName?: string;
       isVerified?: boolean;
       isAcceptingMessage?: boolean;
+      username?: string;
     } & DefaultSession["user"];
+  }
+
+  interface User {
+    _id?: string;
+    isVerified?: boolean;
+    isAcceptingMessage?: boolean;
+    username?: string;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     _id?: string;
-    userName?: string;
     isVerified?: boolean;
     isAcceptingMessage?: boolean;
-  }
-}
-
-// src/types.d.ts
-declare namespace NodeJS {
-  interface ProcessEnv {
-    GOOGLE_API_KEY: string;
+    username?: string;
   }
 }

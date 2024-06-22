@@ -18,18 +18,33 @@ export async function POST(request: Request) {
     }
 
     const isCodeValid = user.verifyCode === code;
-    const isCodeNotExpired = new Date(user.verifyCodeExpiry) > new Date();
+    const isCodeNotExpired = new Date(user.verifyCodeExpiry!) > new Date();
+    const isAlreadyVerified = user.isVerified;
 
-    if (isCodeValid && !isCodeNotExpired) {
-      user.isVerified = true;
-      await user.save();
+    if (isAlreadyVerified) {
       return Response.json(
         {
-          success: true,
-          message: "User verified successfully",
+          success: false,
+          message: "User already verified",
         },
-        { status: 200 }
+        { status: 400 }
       );
+    } else if (isCodeValid && isCodeNotExpired && !isAlreadyVerified) {
+      try {
+        user.isVerified = true;
+        user.verifyCode = undefined;
+        user.verifyCodeExpiry = undefined;
+        await user.save();
+        return Response.json(
+          {
+            success: true,
+            message: "User verified successfully",
+          },
+          { status: 200 }
+        );
+      } finally {
+        await user.save();
+      }
     } else if (!isCodeNotExpired) {
       return Response.json(
         {

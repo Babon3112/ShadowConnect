@@ -5,11 +5,12 @@ import UserModel from "@/models/User.model";
 import { User } from "next-auth";
 import mongoose from "mongoose";
 
-export async function Get(request: Request) {
+export async function GET(request: Request) {
   await dbConnect();
 
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
+
   if (!session || !session.user) {
     return Response.json(
       {
@@ -24,11 +25,14 @@ export async function Get(request: Request) {
 
   try {
     const user = await UserModel.aggregate([
-      { $match: { id: userId } },
+      { $match: { _id: userId } },
       { $unwind: "$messages" },
       { $sort: { "messages.createdAt": -1 } },
       { $group: { _id: "$_id", messages: { $push: "$messages" } } },
     ]);
+    // const userId = user._id;
+    // const user = await UserModel.find({ _id: userId });
+    // console.log(user.messages);
 
     if (!user || user.length === 0) {
       return Response.json(
