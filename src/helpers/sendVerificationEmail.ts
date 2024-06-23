@@ -1,26 +1,70 @@
-import { resend } from "@/lib/resend";
 import VerificationEmail from "../../emails/VerificationEmail";
 import { ApiResponse } from "@/types/ApiResponse";
+import nodemailer from "nodemailer";
+import { google } from "googleapis";
+
+const clientId = process.env.CLIENT_ID;
+const clientSecret = process.env.CLIENT_SECRET;
+const redirectURI = process.env.REDIRECT_URI;
+const refreshToken = process.env.REFRESH_TOKEN;
+
+const oauth2Client = new google.auth.OAuth2(
+  clientId,
+  clientSecret,
+  redirectURI
+);
+
+oauth2Client.setCredentials({
+  refresh_token: refreshToken,
+});
 
 export async function sendVerificationEmail(
   email: string,
-  userName: string,
+  username: string,
   verifyCode: string
 ): Promise<ApiResponse> {
   try {
-    await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: email,
-      subject: "ShadowConnect | Verification code",
-      react: VerificationEmail({ userName, verifyCode }),
+    const { token: accessToken } = await oauth2Client.getAccessToken();
+
+    const transport = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        type: "OAuth2",
+        user: "arnabbabon2002@gmail.com",
+        clientId,
+        clientSecret,
+        refreshToken,
+        accessToken,
+      },
     });
+
+    const mailOptions = {
+      from: "ShadowConnect <arnabbabon2002@gmail.com>",
+      to: email,
+      subject: "ShadowConnect | Verification Code",
+      text: `Hello, ${username}\n\nThank you for registering. Please use the following verification code to complete your registration:\n\n${verifyCode}\n\nIf you did not request this code, please ignore this email.`,
+      html: `
+        <html>
+          <body>
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+              <h2>Hello ${username},</h2>
+              <p>Thank you for registering. Please use the following verification code to complete your registration:</p>
+              <p style="font-size: 1.5em; font-weight: bold;">${verifyCode}</p>
+              <p>If you did not request this code, please ignore this email.</p>
+            </div>
+          </body>
+        </html>`,
+    };
+
+    await transport.sendMail(mailOptions);
 
     return {
       success: true,
       message: "Verification email sent successfully",
     };
-  } catch (emailError) {
-    console.error("Error sending verification email" + emailError);
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+
     return {
       success: false,
       message: "Failed to send verification email",
