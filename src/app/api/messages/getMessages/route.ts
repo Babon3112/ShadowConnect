@@ -33,12 +33,13 @@ export async function GET(request: Request) {
     // const userId = user._id;
     // const user = await UserModel.find({ _id: userId });
     // console.log(user.messages);
+    console.log(user);
 
     if (!user || user.length === 0) {
       return Response.json(
         {
           success: false,
-          message: "User not found",
+          message: "No messages found",
         },
         { status: 401 }
       );

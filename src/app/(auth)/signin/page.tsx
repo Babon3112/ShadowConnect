@@ -44,9 +44,11 @@ const SigninPage = () => {
       });
 
       if (result?.error) {
+        console.log(result.error);
+
         toast({
           title: "Login Failed",
-          description: "Incorrect email or password",
+          description: result.error,
           variant: "destructive",
         });
         setIsSubmitting(false);
@@ -73,7 +75,6 @@ const SigninPage = () => {
             Sign in to continue your adventure with ShadowConnect
           </p>
         </div>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -87,14 +88,13 @@ const SigninPage = () => {
                       type="email"
                       placeholder="Your Email"
                       {...field}
-                      className="w-full border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
+                      className="w-full text-gray-800  borderborder-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               name="password"
               control={form.control}
@@ -106,14 +106,13 @@ const SigninPage = () => {
                       type="password"
                       placeholder="Your Password"
                       {...field}
-                      className="w-full border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
+                      className="w-full text-gray-800 border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <Button
               type="submit"
               disabled={isSubmitting}

@@ -87,7 +87,7 @@ const SignupPage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#121212] text-[#E0E0E0]">
-      <div className="w-full max-w-lg p-10 space-y-8 bg-[#1E1E1E] bg-opacity-90 backdrop-blur-lg rounded-3xl shadow-lg border border-[#373737]">
+      <div className="w-full text-gray-800 max-w-lg p-10 space-y-8 bg-[#1E1E1E] bg-opacity-90 backdrop-blur-lg rounded-3xl shadow-lg border border-[#373737]">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-[#E0E0E0] mb-6">
             Join ShadowConnect
@@ -104,7 +104,7 @@ const SignupPage = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel className="text-white">Username</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Enter your username"
@@ -113,7 +113,7 @@ const SignupPage = () => {
                         field.onChange(e);
                         debounced(e.target.value);
                       }}
-                      className="w-full border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
+                      className="w-full text-gray-800 border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
                     />
                   </FormControl>
                   {isCheckingUsername && (
@@ -138,12 +138,12 @@ const SignupPage = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-white">Email</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Enter your email"
                       {...field}
-                      className="w-full border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
+                      className="w-full text-gray-800 border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
                     />
                   </FormControl>
                   <FormMessage />
@@ -156,7 +156,7 @@ const SignupPage = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-white">Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
