@@ -7,10 +7,8 @@ import { ApiResponse } from "@/types/ApiResponse";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { User } from "next-auth";
-import { useSession } from "next-auth/react";
 
-const sendForgotPasswordEmail = () => {
+export const sendForgotPasswordEmailPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
   const { toast } = useToast();
@@ -97,5 +95,3 @@ const sendForgotPasswordEmail = () => {
     </div>
   );
 };
-
-export default sendForgotPasswordEmail;
