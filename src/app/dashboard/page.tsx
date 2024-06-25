@@ -153,13 +153,13 @@ const DashboardPage = () => {
             />
             <Button
               onClick={copyToClipboard}
-              className="border-none bg-[#004D40] text-[#121212] hover:bg-[#00695C] rounded-md"
+              className="border-none bg-[#5D5FEF] text-[#121212] hover:bg-[#4B4BCB]  rounded-md"
             >
               Copy
             </Button>
           </div>
         </div>
-
+        <p className="mb-4">share this link to recieve messages</p>
         <div className="mb-4 flex items-center">
           <Switch
             {...register("acceptMessages")}
@@ -174,7 +174,7 @@ const DashboardPage = () => {
         </div>
         <Separator />
         <Button
-          className="mt-4 border-none bg-[#004D40] text-[#121212] hover:bg-[#00695C] rounded-md"
+          className="mt-4 border-none bg-[#5D5FEF] text-[#121212] hover:bg-[#4B4BCB]  rounded-md"
           variant="outline"
           onClick={(e) => {
             e.preventDefault();

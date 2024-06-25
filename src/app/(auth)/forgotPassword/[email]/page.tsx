@@ -5,8 +5,10 @@ import * as z from "zod";
 import Link from "next/link";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
-import { signinSchema } from "@/schemas/signinSchema";
+import { useParams, useRouter } from "next/navigation";
+import { signupSchema } from "@/schemas/signupSchema";
+import axios, { AxiosError } from "axios";
+import { ApiResponse } from "@/types/ApiResponse";
 import {
   Form,
   FormControl,
@@ -17,49 +19,55 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, Eye, EyeOff } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { forgotPasswordSchema } from "@/schemas/forgotPasswordSchema";
 
-const SigninPage = () => {
+const SignupPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const params = useParams<{ email: string }>();
 
   // Initialize form with zod schema validation
-  const form = useForm<z.infer<typeof signinSchema>>({
-    resolver: zodResolver(signinSchema),
+  const form = useForm<z.infer<typeof forgotPasswordSchema>>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
-      identifier: "",
-      password: "",
+      forgotPasswordCode: "",
+      newPassword: "",
+      confirmPassword: "",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof signinSchema>) => {
+  const onSubmit = async (data: z.infer<typeof forgotPasswordSchema>) => {
     setIsSubmitting(true);
     try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        identifier: data.identifier,
-        password: data.password,
-      });
-
-      if (result?.error) {
-        console.log(result.error);
-
+      if (data.newPassword !== data.confirmPassword) {
         toast({
-          title: "Login Failed",
-          description: result.error,
+          title: "Passwords mismatch",
+          description: "Both passwords must match",
           variant: "destructive",
         });
-        setIsSubmitting(false);
-      } else if (result?.url) {
-        router.replace("/dashboard");
-        setIsSubmitting(false);
+        return;
       }
+
+      console.log(data.forgotPasswordCode);
+
+      const response = await axios.post<ApiResponse>(
+        "/api/users/forgotPassword",
+        { email: params.email, ...data }
+      );
+      toast({ title: "Password reseted", description: response.data.message });
+      router.replace("/signin");
     } catch (error) {
-      console.error(error);
+      const axiosError = error as AxiosError<ApiResponse>;
+      toast({
+        title: "password reset Failed",
+        description: axiosError.response?.data.message,
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -69,24 +77,48 @@ const SigninPage = () => {
       <div className="w-full max-w-md p-8 space-y-8 bg-[#1A1A2E] bg-opacity-90 backdrop-blur-lg rounded-3xl shadow-lg border border-[#2E2E3A]">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-[#E0E0E0] mb-6">
-            Welcome Back
+            Reset Password
           </h1>
           <p className="text-[#B0BEC5] mb-4">
-            Sign in to continue your adventure with ShadowConnect
+            Reset Password and enjoy ShadowConnect
           </p>
         </div>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
-              name="identifier"
+              name="forgotPasswordCode"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-white">
+                    forgot password code
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      type="email"
-                      placeholder="Your Email"
+                      placeholder="Enter received code"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                      className="w-full text-gray-800 border border-[#4C4C6D] rounded-md p-2 focus:outline-none focus:border-[#C0392B] focus:border-2"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="newPassword"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>New password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter new password"
                       {...field}
                       className="w-full text-gray-800 border border-[#4C4C6D] rounded-md p-2 focus:outline-none focus:border-[#C0392B] focus:border-2"
                     />
@@ -96,16 +128,16 @@ const SigninPage = () => {
               )}
             />
             <FormField
-              name="password"
+              name="confirmPassword"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Confirm password</FormLabel>
                   <FormControl>
                     <div className="flex">
                       <Input
                         type={showPassword ? "text" : "password"}
-                        placeholder="Your Password"
+                        placeholder="Now confirm password"
                         {...field}
                         className="w-full text-gray-800 border border-r-0 border-[#4C4C6D] rounded-md rounded-r-none p-2 focus:outline-none focus:border-[#C0392B] focus:border-2 focus:border-r-0"
                         onFocus={() => setIsFocused(true)}
@@ -144,7 +176,7 @@ const SigninPage = () => {
                   wait...
                 </>
               ) : (
-                "Sign In"
+                "Reset Password"
               )}
             </Button>
           </form>
@@ -152,26 +184,18 @@ const SigninPage = () => {
 
         <div className="text-center mt-4">
           <p className="text-[#A5A6F6]">
-            New to ShadowConnect?{" "}
+            Already a member?{" "}
             <Link
-              href="/signup"
+              href="/signin"
               className="text-[#5D5FEF] hover:text-[#4B4BCB]"
             >
-              Sign up
+              Sign in
             </Link>
           </p>
-        </div>
-        <div className="text-center mt-4">
-          <Link
-            href="/sendForgotPasswordEmail"
-            className="text-[#5D5FEF] hover:text-[#4B4BCB]"
-          >
-            Forgot password?
-          </Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default SigninPage;
+export default SignupPage;

@@ -102,8 +102,8 @@ export default function SendMessage() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#121212] text-[#E0E0E0]">
-      <div className="container mt-24 p-6 bg-[#1E1E1E] bg-opacity-90 backdrop-blur-lg rounded-3xl shadow-lg border border-[#373737]">
-        <h1 className="text-4xl font-bold mb-6 text-center text-[#E0E0E0]">
+      <div className=" w-3/4 p-8 space-y-8 bg-[#1A1A2E] bg-opacity-90 backdrop-blur-lg rounded-3xl shadow-lg border border-[#2E2E3A] mt-32">
+        <h1 className="text-4xl font-bold text-center text-[#E0E0E0]">
           Public Profile Link
         </h1>
         <Form {...form}>
@@ -117,7 +117,7 @@ export default function SendMessage() {
                   <FormControl>
                     <Textarea
                       placeholder="Write your anonymous message here"
-                      className="resize-none w-full border border-[#80CBC4] bg-[#1E1E1E] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
+                      className="resize-none w-full border border-[#4C4C6D] bg-[#1E1E1E] rounded-md p-2 focus:outline-none focus:border-[#C0392B] focus:border-2"
                       {...field}
                     />
                   </FormControl>
@@ -129,7 +129,7 @@ export default function SendMessage() {
               {isLoading ? (
                 <Button
                   disabled
-                  className="flex items-center bg-[#004D40] text-[#121212] hover:bg-[#00695C] rounded-md"
+                  className="flex items-center bg-[#5D5FEF] text-[#121212] rounded-md"
                 >
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Please wait
@@ -138,7 +138,7 @@ export default function SendMessage() {
                 <Button
                   type="submit"
                   disabled={isLoading || !messageContent}
-                  className="px-4 py-2 bg-[#004D40] text-[#121212] hover:bg-[#00695C] rounded-md"
+                  className="px-4 py-2 bg-[#5D5FEF] text-[#121212] hover:bg-[#4B4BCB] rounded-md"
                 >
                   Send It
                 </Button>
@@ -146,22 +146,28 @@ export default function SendMessage() {
             </div>
           </form>
         </Form>
-
-        <div className="space-y-4 my-8">
+        <div className="space-y-4">
           <div className="space-y-2 text-center">
             <Button
               onClick={fetchSuggestedMessages}
-              className="my-4 px-4 py-2 bg-[#004D40] text-[#121212] hover:bg-[#00695C] rounded-md"
               disabled={isSuggestLoading}
+              className="px-4 py-2 bg-[#5D5FEF] text-[#121212] hover:bg-[#4B4BCB] rounded-md"
             >
-              Suggest Messages
+              {isSuggestLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Suggesting Messages
+                </>
+              ) : (
+                "Suggest Messages"
+              )}
             </Button>
             <p className="text-[#B0BEC5]">
               Click on any message below to select it.
             </p>
           </div>
-          <Card className="rounded-md shadow-sm border-[#373737]">
-            <CardHeader className="bg-[#1E1E1E] p-4 border-b-2 border-[#373737]">
+          <Card className="rounded-md shadow-sm border-2 border-[#4C4C6D]">
+            <CardHeader className="bg-[#1E1E1E] p-4 border-b-2 border-[#4C4C6D]">
               <h3 className="text-xl font-semibold text-[#E0E0E0]">Messages</h3>
             </CardHeader>
             <CardContent className="p-4 flex flex-col space-y-4 bg-[#121212]">
@@ -169,7 +175,7 @@ export default function SendMessage() {
                 <Button
                   key={index}
                   variant="outline"
-                  className="border-none text-[#E0E0E0] bg-[#1E1E1E] px-4 py-2 rounded-md hover:bg-[#00695C] hover:text-[#121212] hover:font-extrabold"
+                  className="border-none text-[#E0E0E0] bg-[#1E1E1E] p-4 rounded-md hover:bg-[#4B4BCB] hover:text-[#ffffff] hover:font-bold text-wrap"
                   onClick={() => handleMessageClick(message)}
                 >
                   {message}
@@ -179,12 +185,12 @@ export default function SendMessage() {
           </Card>
         </div>
 
-        <Separator className="my-6 border-[#373737]" />
+        <Separator className="bg-[#5D5FEF]" />
 
         <div className="text-center">
           <div className="mb-4 text-[#B0BEC5]">Get Your Message Board</div>
           <Link href={"/sign-up"}>
-            <Button className="bg-[#004D40] text-[#121212] hover:bg-[#00695C] rounded-md">
+            <Button className="bg-[#5D5FEF] text-[#121212] hover:bg-[#4B4BCB] rounded-md">
               Create Your Account
             </Button>
           </Link>

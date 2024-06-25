@@ -16,11 +16,10 @@ oauth2Client.setCredentials({
   refresh_token: refreshToken,
 });
 
-export async function sendVerificationEmail(
+export async function sendForgotPasswordEmail(
   email,
-  username,
-  verifyCode,
-  verifyUrl
+  forgotPasswordCode,
+  forgotPasswordUrl
 ) {
   try {
     const { token: accessToken } = await oauth2Client.getAccessToken();
@@ -42,18 +41,17 @@ export async function sendVerificationEmail(
     const mailOptions = {
       from: "ShadowConnect <arnabbabon2002@gmail.com>",
       to: email,
-      subject: "ShadowConnect | Verification Code",
-      text: `Hello, ${username}\n\nThank you for registering. Please use the following verification code to complete your registration:\n\n${verifyCode}\n\nThis code is valid only for 1 hour.\n\nIf you did not request this code, please ignore this email.`,
+      subject: "ShadowConnect | Forgot Password Code",
+      text: `Please enter the following code to change your password:\n\n${forgotPasswordCode}\n\nOr copy and paste this url in your browser to reset email:${forgotPasswordUrl}\n\nThis code is valid only for 30 minutes.\n\nIf you did not request this code, please ignore this email.`,
       html: `
         <html>
           <body>
             <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-              <h2>Hello ${username},</h2>
-              <p>Thank you for registering. Please use the following verification code to complete your registration:</p>
-              <p style="font-size: 1.5em; font-weight: bold;">${verifyCode}</p>
-              <p>Or copy and paste this url in your browser to verify email:</p>
-              <p>${verifyUrl}</p>
-              <p>This code is valid only for 1 hour.</p>
+              <p>Please enter the following code to change your password:</p>
+              <p style="font-size: 1.5em; font-weight: bold;">${forgotPasswordCode}</p>
+              <p>Or copy and paste this url in your browser to reset password:</p>
+              <p>${forgotPasswordUrl}</p>
+              <p>This code is valid only for 30 minutes.</p>
               <p>If you did not request this code, please ignore this email.</p>
             </div>
           </body>
@@ -64,14 +62,14 @@ export async function sendVerificationEmail(
 
     return {
       success: true,
-      message: "Verification email sent successfully",
+      message: "forgot password email sent successfully",
     };
   } catch (error) {
-    console.error("Error sending verification email:", error);
+    console.error("Error sending forgot password email:", error);
 
     return {
       success: false,
-      message: "Failed to send verification email",
+      message: "Failed to send forgot password email",
     };
   }
 }

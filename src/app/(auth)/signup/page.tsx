@@ -33,7 +33,6 @@ const SignupPage = () => {
   const { toast } = useToast();
   const router = useRouter();
 
-  // Initialize form with zod schema validation
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -43,7 +42,6 @@ const SignupPage = () => {
     },
   });
 
-  // Check if the username is unique
   useEffect(() => {
     const checkUsernameUnique = async () => {
       if (username) {
@@ -68,11 +66,16 @@ const SignupPage = () => {
     checkUsernameUnique();
   }, [username]);
 
-  // Handle form submission
   const onSubmit = async (data: z.infer<typeof signupSchema>) => {
     setIsSubmitting(true);
     try {
-      const response = await axios.post<ApiResponse>("/api/users/signup", data);
+      let verifyUrl = "";
+      const baseUrl = `${window.location.protocol}//${window.location.host}`;
+      verifyUrl = `${baseUrl}/verify/${username}`;
+      const response = await axios.post<ApiResponse>("/api/users/signup", {
+        verifyUrl,
+        ...data,
+      });
       toast({ title: "Signup Success", description: response.data.message });
       router.replace(`/verify/${username}`);
     } catch (error) {
@@ -89,7 +92,7 @@ const SignupPage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#121212] text-[#E0E0E0]">
-      <div className="w-full text-gray-800 max-w-lg p-10 space-y-8 bg-[#1E1E1E] bg-opacity-90 backdrop-blur-lg rounded-3xl shadow-lg border border-[#373737]">
+      <div className="w-full max-w-md p-8 space-y-8 bg-[#1A1A2E] bg-opacity-90 backdrop-blur-lg rounded-3xl shadow-lg border border-[#2E2E3A]">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-[#E0E0E0] mb-6">
             Join ShadowConnect
@@ -115,7 +118,7 @@ const SignupPage = () => {
                         field.onChange(e);
                         debounced(e.target.value);
                       }}
-                      className="w-full text-gray-800 border border-r-0 border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:border-2"
+                      className="w-full text-gray-800 border border-[#4C4C6D] rounded-md p-2 focus:outline-none focus:border-[#C0392B] focus:border-2"
                     />
                   </FormControl>
                   {isCheckingUsername && (
@@ -145,7 +148,7 @@ const SignupPage = () => {
                     <Input
                       placeholder="Enter your email"
                       {...field}
-                      className="w-full text-gray-800 border border-r-0 border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:border-2"
+                      className="w-full text-gray-800 border border-[#4C4C6D] rounded-md p-2 focus:outline-none focus:border-[#C0392B] focus:border-2"
                     />
                   </FormControl>
                   <FormMessage />
@@ -158,23 +161,23 @@ const SignupPage = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Password</FormLabel>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <div className="flex">
                       <Input
                         type={showPassword ? "text" : "password"}
                         placeholder="Your Password"
                         {...field}
-                        className="w-full text-gray-800 border border-r-0 border-[#80CBC4] rounded-l-md p-2 focus:outline-none focus:border-[#004D40] focus:border-2 focus:border-r-0"
+                        className="w-full text-gray-800 border border-r-0 border-[#4C4C6D] rounded-md rounded-r-none p-2 focus:outline-none focus:border-[#C0392B] focus:border-2 focus:border-r-0"
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
                       />
                       <Button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className={`flex h-12 items-center text-gray-500 bg-white rounded-none rounded-r-md border border-[#80CBC4] border-l-0 px-3 hover:bg-white ${
+                        className={`flex h-12 items-center text-gray-500 bg-white rounded-none rounded-r-md border border-[#4C4C6D] border-l-0 px-3 hover:bg-white ${
                           isFocused
-                            ? "border-[#004D40] border-2 border-l-0 ring-offset-background outline-none"
+                            ? "outline-none border-[#C0392B] border-2 border-l-0"
                             : ""
                         }`}
                       >
@@ -194,7 +197,7 @@ const SignupPage = () => {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-2 px-4 bg-[#004D40] text-[#121212] rounded-md hover:bg-[#00695C] focus:outline-none focus:ring-2 focus:ring-[#004D40] focus:ring-opacity-50"
+              className="w-full py-2 px-4 bg-[#5D5FEF] text-[#121212] rounded-md hover:bg-[#4B4BCB] focus:outline-none focus:ring-2 focus:ring-[#5D5FEF] focus:ring-opacity-50"
             >
               {isSubmitting ? (
                 <>
@@ -209,11 +212,11 @@ const SignupPage = () => {
         </Form>
 
         <div className="text-center mt-4">
-          <p className="text-[#B0BEC5]">
+          <p className="text-[#A5A6F6]">
             Already a member?{" "}
             <Link
               href="/signin"
-              className="text-[#80CBC4] hover:text-[#004D40]"
+              className="text-[#5D5FEF] hover:text-[#4B4BCB]"
             >
               Sign in
             </Link>

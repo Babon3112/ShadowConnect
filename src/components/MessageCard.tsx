@@ -47,7 +47,7 @@ export const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
   };
 
   return (
-    <Card className="card-bordered bg-[#1E1E1E] text-[#E0E0E0] p-4 rounded-3xl shadow-lg border border-[#373737]">
+    <Card className="card-bordered bg-[#1A1A2E] text-[#E0E0E0] p-4 rounded-3xl shadow-lg border-[#4C4C6D] border-2">
       <CardHeader>
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg font-semibold">

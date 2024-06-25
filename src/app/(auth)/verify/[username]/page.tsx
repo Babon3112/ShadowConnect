@@ -63,7 +63,7 @@ const VerifyAccountPage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#121212] text-[#E0E0E0]">
-      <div className="w-full max-w-md p-8 space-y-8 bg-[#1E1E1E] bg-opacity-90 backdrop-blur-lg rounded-3xl shadow-lg border border-[#373737]">
+      <div className="w-full max-w-md p-8 space-y-8 bg-[#1A1A2E] bg-opacity-90 backdrop-blur-lg rounded-3xl shadow-lg border border-[#2E2E3A]">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight text-[#E0E0E0] lg:text-5xl mb-6">
             Verify Your Account
@@ -72,7 +72,6 @@ const VerifyAccountPage = () => {
             Enter the verification code sent to your email.
           </p>
         </div>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -97,12 +96,11 @@ const VerifyAccountPage = () => {
                 </FormItem>
               )}
             />
-
             <Button
               type="submit"
-              className="w-full py-2 px-4 bg-[#004D40] text-[#121212] rounded-md hover:bg-[#00695C] focus:outline-none focus:ring-2 focus:ring-[#004D40] focus:ring-opacity-50"
+              className="w-full py-2 px-4 bg-[#5D5FEF] text-[#121212] rounded-md hover:bg-[#4B4BCB] focus:outline-none focus:ring-2 focus:ring-[#5D5FEF] focus:ring-opacity-50"
             >
-              Submit
+              Verify
             </Button>
           </form>
         </Form>
