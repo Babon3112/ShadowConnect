@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { forgotPasswordSchema } from "@/schemas/forgotPasswordSchema";
 
-export const forgotPasswordPage = () => {
+export const ForgotPasswordPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
