@@ -1,5 +1,3 @@
-import VerificationEmail from "../../emails/VerificationEmail";
-import { ApiResponse } from "@/types/ApiResponse";
 import nodemailer from "nodemailer";
 import { google } from "googleapis";
 
@@ -18,16 +16,14 @@ oauth2Client.setCredentials({
   refresh_token: refreshToken,
 });
 
-export async function sendVerificationEmail(
-  email: string,
-  username: string,
-  verifyCode: string
-): Promise<ApiResponse> {
+export async function sendVerificationEmail(email, username, verifyCode) {
   try {
     const { token: accessToken } = await oauth2Client.getAccessToken();
 
     const transport = nodemailer.createTransport({
       service: "Gmail",
+      secure: true,
+      port: 465,
       auth: {
         type: "OAuth2",
         user: "arnabbabon2002@gmail.com",
