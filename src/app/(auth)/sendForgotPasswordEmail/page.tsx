@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 
-export const SendForgotPasswordEmailPage = () => {
+const SendForgotPasswordEmailPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
   const { toast } = useToast();
@@ -95,3 +95,5 @@ export const SendForgotPasswordEmailPage = () => {
     </div>
   );
 };
+
+export default SendForgotPasswordEmailPage;
