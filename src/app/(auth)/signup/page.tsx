@@ -20,13 +20,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 const SignupPage = () => {
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState("");
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const debounced = useDebounceCallback(setUsername, 400);
   const { toast } = useToast();
   const router = useRouter();
@@ -113,7 +115,7 @@ const SignupPage = () => {
                         field.onChange(e);
                         debounced(e.target.value);
                       }}
-                      className="w-full text-gray-800 border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
+                      className="w-full text-gray-800 border border-r-0 border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:border-2"
                     />
                   </FormControl>
                   {isCheckingUsername && (
@@ -143,7 +145,7 @@ const SignupPage = () => {
                     <Input
                       placeholder="Enter your email"
                       {...field}
-                      className="w-full text-gray-800 border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
+                      className="w-full text-gray-800 border border-r-0 border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:border-2"
                     />
                   </FormControl>
                   <FormMessage />
@@ -158,12 +160,31 @@ const SignupPage = () => {
                 <FormItem>
                   <FormLabel className="text-white">Password</FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Create a password"
-                      {...field}
-                      className="w-full border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
-                    />
+                    <div className="flex">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Your Password"
+                        {...field}
+                        className="w-full text-gray-800 border border-r-0 border-[#80CBC4] rounded-l-md p-2 focus:outline-none focus:border-[#004D40] focus:border-2 focus:border-r-0"
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                      />
+                      <Button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className={`flex h-12 items-center text-gray-500 bg-white rounded-none rounded-r-md border border-[#80CBC4] border-l-0 px-3 hover:bg-white ${
+                          isFocused
+                            ? "border-[#004D40] border-2 border-l-0 ring-offset-background outline-none"
+                            : ""
+                        }`}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

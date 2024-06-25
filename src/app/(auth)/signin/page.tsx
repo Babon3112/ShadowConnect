@@ -17,11 +17,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 
 const SigninPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -52,9 +54,7 @@ const SigninPage = () => {
           variant: "destructive",
         });
         setIsSubmitting(false);
-      }
-
-      if (result?.url) {
+      } else if (result?.url) {
         router.replace("/dashboard");
         setIsSubmitting(false);
       }
@@ -88,7 +88,7 @@ const SigninPage = () => {
                       type="email"
                       placeholder="Your Email"
                       {...field}
-                      className="w-full text-gray-800  borderborder-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
+                      className="w-full text-gray-800 border border-r-0 border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:border-2"
                     />
                   </FormControl>
                   <FormMessage />
@@ -102,17 +102,37 @@ const SigninPage = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Your Password"
-                      {...field}
-                      className="w-full text-gray-800 border border-[#80CBC4] rounded-md p-2 focus:outline-none focus:border-[#004D40] focus:ring focus:ring-[#004D40] focus:ring-opacity-50"
-                    />
+                    <div className="flex">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Your Password"
+                        {...field}
+                        className="w-full text-gray-800 border border-r-0 border-[#80CBC4] rounded-l-md p-2 focus:outline-none focus:border-[#004D40] focus:border-2 focus:border-r-0"
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                      />
+                      <Button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className={`flex h-12 items-center text-gray-500 bg-white rounded-none rounded-r-md border border-[#80CBC4] border-l-0 px-3 hover:bg-white ${
+                          isFocused
+                            ? "border-[#004D40] border-2 border-l-0 ring-offset-background outline-none"
+                            : ""
+                        }`}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <Button
               type="submit"
               disabled={isSubmitting}
