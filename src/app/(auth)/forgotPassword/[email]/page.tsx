@@ -11,6 +11,7 @@ import { ApiResponse } from "@/types/ApiResponse";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,6 +21,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { forgotPasswordSchema } from "@/schemas/forgotPasswordSchema";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 const ForgotPasswordPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -86,28 +92,27 @@ const ForgotPasswordPage = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
-              name="forgotPasswordCode"
               control={form.control}
+              name="forgotPasswordCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">
-                    forgot password code
-                  </FormLabel>
+                  <FormLabel>Forgot password code</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter received code"
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                      }}
-                      className="w-full text-gray-800 border border-[#4C4C6D] rounded-md p-2 focus:outline-none focus:border-blue-600 focus:border-2"
-                    />
+                    <InputOTP maxLength={6} {...field}>
+                      <InputOTPGroup>
+                        {[...Array(6)].map((_, index) => (
+                          <InputOTPSlot key={index} index={index} />
+                        ))}
+                      </InputOTPGroup>
+                    </InputOTP>
                   </FormControl>
+                  <FormDescription className="text-[#e4e4e4]">
+                    Please enter the 6-digit code.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               name="newPassword"
               control={form.control}

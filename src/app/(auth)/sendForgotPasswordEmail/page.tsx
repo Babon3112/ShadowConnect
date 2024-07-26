@@ -16,11 +16,16 @@ const SendForgotPasswordEmailPage = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    let forgotPasswordUrl = "";
+    const baseUrl = `${window.location.protocol}//${window.location.host}`;
+    forgotPasswordUrl = `${baseUrl}/forgotPassword/${email}`;
+
     setIsSubmitting(true);
     try {
       const response = await axios.post<ApiResponse>(
         "/api/users/sendForgotPasswordEmail",
-        { email }
+        { email, forgotPasswordUrl }
       );
       toast({ title: "Email sent", description: response.data.message });
       router.replace(`/forgotPassword/${email}`);

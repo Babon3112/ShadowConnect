@@ -68,10 +68,12 @@ const SignupPage = () => {
 
   const onSubmit = async (data: z.infer<typeof signupSchema>) => {
     setIsSubmitting(true);
+
+    let verifyUrl = "";
+    const baseUrl = `${window.location.protocol}//${window.location.host}`;
+    verifyUrl = `${baseUrl}/verify/${username}`;
+
     try {
-      let verifyUrl = "";
-      const baseUrl = `${window.location.protocol}//${window.location.host}`;
-      verifyUrl = `${baseUrl}/verify/${username}`;
       const response = await axios.post<ApiResponse>("/api/users/signup", {
         verifyUrl,
         ...data,

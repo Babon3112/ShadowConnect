@@ -1,13 +1,23 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User.model";
 import bcrypt from "bcryptjs";
-import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
+import { sendVerificationEmail } from "@/helper/sendEmail";
 
 export async function POST(request: Request) {
   await dbConnect();
 
   try {
     const { username, email, password, verifyUrl } = await request.json();
+
+    if (!username || !email || !password || !verifyUrl) {
+      return Response.json(
+        {
+          success: false,
+          message: "All fields are required",
+        },
+        { status: 400 }
+      );
+    }
 
     const existingUserByUsername = await UserModel.findOne({
       username,

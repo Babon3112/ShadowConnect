@@ -1,5 +1,5 @@
 import UserMoodel from "@/models/User.model";
-import { sendForgotPasswordEmail } from "@/helpers/sendForgotPasswordEmail";
+import { sendForgotPasswordEmail } from "@/helper/sendEmail";
 import dbConnect from "@/lib/dbConnect";
 
 export async function POST(request: Request) {
@@ -7,6 +7,16 @@ export async function POST(request: Request) {
     await dbConnect();
 
     const { email, forgotPasswordUrl } = await request.json();
+
+    if (!email || !forgotPasswordUrl) {
+      return Response.json(
+        {
+          success: false,
+          message: "Missing email or forgotPasswordUrl",
+        },
+        { status: 400 }
+      );
+    }
 
     const user = await UserMoodel.findOne({ email, isVerified: true });
     if (!user) {

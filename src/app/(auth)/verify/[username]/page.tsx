@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -30,21 +29,17 @@ const VerifyAccountPage = () => {
   const params = useParams<{ username: string }>();
   const { toast } = useToast();
 
-  // Form setup with zod schema for validation
   const form = useForm<z.infer<typeof verifySchema>>({
     resolver: zodResolver(verifySchema),
   });
 
-  // Handle form submission
   const onSubmit = async (data: z.infer<typeof verifySchema>) => {
     try {
-      // Send verification request
       const response = await axios.post<ApiResponse>("/api/users/verifyCode", {
         username: params.username,
         code: data.code,
       });
 
-      // Success toast and redirect
       toast({
         title: "Verification Successful",
         description: response.data.message,
