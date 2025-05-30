@@ -189,7 +189,7 @@ export default function SendMessage() {
 
         <div className="text-center">
           <div className="mb-4 text-gray-400">Get Your Message Board</div>
-          <Link href={"/sign-up"}>
+          <Link href={"/signup"}>
             <Button className="bg-blue-500 text-gray-900 hover:bg-blue-600 rounded-md">
               Create Your Account
             </Button>
