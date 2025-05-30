@@ -25,7 +25,7 @@ async function createTransport() {
     port: 465,
     auth: {
       type: "OAuth2",
-      user: "geekycoder.ag@gmail.com",
+      user: "babonarnab@gmail.com",
       clientId,
       clientSecret,
       refreshToken,
@@ -62,7 +62,7 @@ export async function sendVerificationEmail(
     const transport = await createTransport();
 
     const mailOptions = {
-      from: "ShadowConnect <geekycoder.ag@gmail.com>",
+      from: "ShadowConnect <babonarnab@gmail.com>",
       to: email,
       subject: "ShadowConnect | Verification Code",
       text: `Hello, ${username}\n\nThank you for registering. Please use the following verification code to complete your registration:\n\n${verifyCode}\n\nThis code is valid only for 1 hour.\n\nIf you did not request this code, please ignore this email.`,
